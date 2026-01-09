@@ -10,18 +10,19 @@ app.use(express.static('.'));
 
 // PDF generation endpoint
 app.post('/generate-pdf', async (req, res) => {
-    const { results, studentInfo } = req.body;
+    const { results, studentInfo, language } = req.body;
 
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
         });
 
         const page = await browser.newPage();
 
-        // Build HTML
-        const html = buildPdfHtml(results, studentInfo);
+        // Build HTML with language support
+        const html = buildPdfHtml(results, studentInfo, language || 'ru');
 
         await page.setContent(html, { waitUntil: 'networkidle0' });
 
@@ -46,8 +47,29 @@ app.post('/generate-pdf', async (req, res) => {
     }
 });
 
-function buildPdfHtml(results, studentInfo) {
-    const typeDescriptions = {
+function buildPdfHtml(results, studentInfo, language = 'ru') {
+    const translations = {
+        ru: {
+            resultsTitle: 'Результаты теста',
+            yourTypeTitle: 'Ваш тип личности RIASEC:',
+            detailedResults: 'Детальные результаты:',
+            recommendedMajors: 'Рекомендуемые специальности:',
+            entAnalysisTitle: 'Анализ профильных предметов:',
+            entMatchYes: 'Ваш выбор профильных предметов хорошо согласуется с вашим типом личности.',
+            entMatchNo: 'Текущий выбор профильных предметов отличается от вашего профиля. Можно обсудить это с профориентатором.'
+        },
+        kk: {
+            resultsTitle: 'Тест нәтижелері',
+            yourTypeTitle: 'Сіздің RIASEC тұлға түріңіз:',
+            detailedResults: 'Егжей-тегжейлі нәтижелер:',
+            recommendedMajors: 'Ұсынылатын мамандықтар:',
+            entAnalysisTitle: 'Таңдау пәндерінің талдауы:',
+            entMatchYes: 'Сіздің таңдау пәндеріңіз тұлға түріңізбен жақсы сәйкес келеді.',
+            entMatchNo: 'Ағымдағы таңдау пәндері сіздің профиліңізден ерекшеленеді. Мұны профориентатормен талқылауға болады.'
+        }
+    };
+
+    const typeDescriptionsRu = {
         R: 'Реалистичный',
         I: 'Исследовательский',
         A: 'Артистичный',
@@ -56,7 +78,16 @@ function buildPdfHtml(results, studentInfo) {
         C: 'Системный'
     };
 
-    const fullDescriptions = {
+    const typeDescriptionsKk = {
+        R: 'Шынайы',
+        I: 'Зерттеушілік',
+        A: 'Көркемдік',
+        S: 'Әлеуметтік',
+        E: 'Кәсіпкерлік',
+        C: 'Жүйелік'
+    };
+
+    const fullDescriptionsRu = {
         R: 'Вы практичны и любите работать руками. Вам нравится создавать реальные вещи и видеть результат своей работы.',
         I: 'Вы аналитичны и любознательны. Вам нравится исследовать, анализировать и понимать, как всё работает.',
         A: 'Вы креативны и оригинальны. Вам нравится создавать что-то новое и выражать свои идеи.',
@@ -64,6 +95,19 @@ function buildPdfHtml(results, studentInfo) {
         E: 'Вы амбициозны и энергичны. Вам нравится вести за собой и добиваться целей.',
         C: 'Вы организованны и внимательны к деталям. Вам нравится порядок и чёткие правила.'
     };
+
+    const fullDescriptionsKk = {
+        R: 'Сіз практикалықсыз және қолмен жұмыс істеуді жақсы көресіз. Сіз нақты заттар жасауды және жұмысыңыздың нәтижесін көруді ұнатасыз.',
+        I: 'Сіз аналитикалықсыз және қызығушысыз. Сіз зерттеуді, талдауды және бәрі қалай жұмыс істейтінін түсінуді ұнатасыз.',
+        A: 'Сіз креативтісіз және өзгешесіз. Сіз жаңа нәрсе жасауды және идеяларыңызды білдіруді ұнатасыз.',
+        S: 'Сіз эмпатиялысыз және қарым-қатынасшылсыз. Сіз адамдарға көмектесуді және командада жұмыс істеуді ұнатасыз.',
+        E: 'Сіз амбициялысыз және өзіңізге сенімдісіз. Сіз басқаруды, көндіруді және мақсаттарға жетуді ұнатасыз.',
+        C: 'Сіз ұйымдастырылғансыз және егжей-тегжейлерге мұқият қарайсыз. Сіз ақпаратты жүйелеуді және деректермен жұмыс істеуді ұнатасыз.'
+    };
+
+    const t = translations[language];
+    const typeDescriptions = language === 'kk' ? typeDescriptionsKk : typeDescriptionsRu;
+    const fullDescriptions = language === 'kk' ? fullDescriptionsKk : fullDescriptionsRu;
 
     const getScoreColor = (score) => {
         if (score >= 8) return '#00B8D4';
@@ -266,19 +310,19 @@ function buildPdfHtml(results, studentInfo) {
             <img src="https://ku.arizona.cv/logos/arizona-logo-arizona.png" alt="Arizona">
             <img src="https://ku.arizona.cv/logos/ertis academy logo vertical for alfacrm.png" alt="Ertis">
         </div>
-        <div class="title">Результаты теста</div>
-        <div class="student-info">${new Date().toLocaleDateString('ru-RU')}</div>
+        <div class="title">${t.resultsTitle}</div>
+        <div class="student-info">${new Date().toLocaleDateString(language === 'kk' ? 'kk-KZ' : 'ru-RU')}</div>
     </div>
 
     <div class="riasec-section">
-        <div class="riasec-label">Ваш тип личности RIASEC:</div>
+        <div class="riasec-label">${t.yourTypeTitle}</div>
         <div class="riasec-code">${results.code}</div>
         <div class="type-names">${typeNames}</div>
         <div class="description">${descriptions}</div>
     </div>
 
     <div class="scores-section">
-        <div class="section-title">Детальные результаты:</div>
+        <div class="section-title">${t.detailedResults}</div>
         ${sortedScores.map(([type, score]) => `
             <div class="score-row">
                 <div class="score-label">${type} - ${typeDescriptions[type]}</div>
@@ -291,17 +335,15 @@ function buildPdfHtml(results, studentInfo) {
     </div>
 
     <div class="majors-section">
-        <div class="section-title">Рекомендуемые специальности:</div>
+        <div class="section-title">${t.recommendedMajors}</div>
         <div class="majors-grid">
             ${results.majors.map(major => `<span class="major-tag">${major}</span>`).join('')}
         </div>
     </div>
 
     <div class="ent-section">
-        <div class="ent-title">Анализ профильных предметов:</div>
-        <div class="ent-text">${results.entMatch
-            ? 'Ваш выбор профильных предметов хорошо согласуется с вашим типом личности.'
-            : 'Текущий выбор профильных предметов отличается от вашего профиля. Можно обсудить это с профориентатором.'}</div>
+        <div class="ent-title">${t.entAnalysisTitle}</div>
+        <div class="ent-text">${results.entMatch ? t.entMatchYes : t.entMatchNo}</div>
     </div>
 
     <div class="footer">
@@ -314,18 +356,19 @@ function buildPdfHtml(results, studentInfo) {
 
 // PDF generation endpoint for riasec-full.js (50-question test)
 app.post('/generate-riasec-full-pdf', async (req, res) => {
-    const { results, studentInfo } = req.body;
+    const { results, studentInfo, language } = req.body;
 
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
         });
 
         const page = await browser.newPage();
 
-        // Build HTML for full test
-        const html = buildFullPdfHtml(results, studentInfo);
+        // Build HTML for full test with language support
+        const html = buildFullPdfHtml(results, studentInfo, language || 'kk');
 
         await page.setContent(html, { waitUntil: 'networkidle0' });
 
@@ -349,8 +392,36 @@ app.post('/generate-riasec-full-pdf', async (req, res) => {
     }
 });
 
-function buildFullPdfHtml(results, studentInfo) {
-    const typeDescriptions = {
+function buildFullPdfHtml(results, studentInfo, language = 'kk') {
+    const translations = {
+        ru: {
+            resultsTitle: 'Результаты RIASEC теста',
+            yourTypeTitle: 'Ваш тип личности RIASEC:',
+            detailedResults: 'Детальные результаты:',
+            recommendedMajors: 'Рекомендуемые специальности:',
+            entAnalysisTitle: 'Анализ профильных предметов:',
+            entAnalysisDefault: 'Рекомендуем обсудить выбор профильных предметов с профориентатором.'
+        },
+        kk: {
+            resultsTitle: 'RIASEC тестінің нәтижелері',
+            yourTypeTitle: 'Сіздің RIASEC тұлға типіңіз:',
+            detailedResults: 'Егжей-тегжейлі нәтижелер:',
+            recommendedMajors: 'Ұсынылатын мамандықтар:',
+            entAnalysisTitle: 'Таңдау пәндерін талдау:',
+            entAnalysisDefault: 'Профориентатормен таңдау пәндерін талқылауды ұсынамыз.'
+        }
+    };
+
+    const typeDescriptionsKk = {
+        R: 'Реалистік',
+        I: 'Зерттеушілік',
+        A: 'Артистік',
+        S: 'Әлеуметтік',
+        E: 'Кәсіпкерлік',
+        C: 'Жүйелік'
+    };
+
+    const typeDescriptionsRu = {
         R: 'Реалистичный',
         I: 'Исследовательский',
         A: 'Артистичный',
@@ -359,39 +430,70 @@ function buildFullPdfHtml(results, studentInfo) {
         C: 'Системный'
     };
 
-    const fullDescriptions = {
+    const fullDescriptionsKk = {
+        R: 'Сіз практикалысыз және қолыңызбен жұмыс істегенді ұнатасыз. Нақты заттарды жасап, жұмысыңыздың нәтижесін көргенді жақсы көресіз.',
+        I: 'Сіз талдаушысыз және білгіңіз келеді. Зерттеп, талдап, барлығының қалай жұмыс істейтінін түсінгенді ұнатасыз.',
+        A: 'Сіз креативтісіз және бірегейсіз. Жаңа нәрселер жасап, идеяларыңызды білдіргенді ұнатасыз.',
+        S: 'Сіз эмпатиялысыз және коммуникабельдісіз. Адамдарға көмектесіп, командада жұмыс істегенді жақсы көресіз.',
+        E: 'Сіз амбициялысыз және өзіңізге сенімдісіз. Басқаруды, сендіруді және мақсаттарға жетуді ұнатасыз.',
+        C: 'Сіз ұйымдастырылғансыз және бөлшектерге мән бересіз. Ақпаратты жүйелеп, деректермен жұмыс істегенді ұнатасыз.'
+    };
+
+    const fullDescriptionsRu = {
         R: 'Вы практичны и любите работать руками. Вам нравится создавать реальные вещи и видеть результат своей работы.',
         I: 'Вы аналитичны и любознательны. Вам нравится исследовать, анализировать и понимать, как всё работает.',
         A: 'Вы креативны и оригинальны. Вам нравится создавать что-то новое и выражать свои идеи.',
-        S: 'Вы общительны и эмпатичны. Вам нравится помогать людям и работать в команде.',
-        E: 'Вы амбициозны и энергичны. Вам нравится вести за собой и добиваться целей.',
-        C: 'Вы организованны и внимательны к деталям. Вам нравится порядок и чёткие правила.'
+        S: 'Вы эмпатичны и общительны. Вам нравится помогать людям и работать в команде.',
+        E: 'Вы амбициозны и уверены в себе. Вам нравится руководить, убеждать и достигать целей.',
+        C: 'Вы организованны и внимательны к деталям. Вам нравится систематизировать информацию и работать с данными.'
     };
+
+    const t = translations[language];
+    const typeDescriptions = language === 'kk' ? typeDescriptionsKk : typeDescriptionsRu;
+    const fullDescriptions = language === 'kk' ? fullDescriptionsKk : fullDescriptionsRu;
 
     const majorsByType = {
-        R: ["Инженерия", "Механика", "Строительство", "Сельское хозяйство", "Спорт", "Военное дело", "Ветеринария", "Геология"],
-        I: ["Программирование", "Медицина", "Биология", "Физика", "Химия", "Математика", "Data Science", "Биотехнологии"],
-        A: ["Дизайн", "Архитектура", "Журналистика", "Кино", "Музыка", "Реклама", "Фотография", "Мода"],
-        S: ["Педагогика", "Психология", "Медицина", "Социальная работа", "HR", "Туризм", "Переводоведение"],
-        E: ["Бизнес", "Менеджмент", "Маркетинг", "Юриспруденция", "Политология", "PR", "Финансы", "Международные отношения"],
-        C: ["Бухгалтерия", "Экономика", "Банковское дело", "Логистика", "Статистика", "Аудит", "Госуправление", "IT-администрирование"]
+        R: ["Инженерия", "Механика", "Құрылыс", "Ауыл шаруашылығы", "Спорт", "Әскери іс", "Ветеринария", "Геология"],
+        I: ["Бағдарламалау", "Медицина", "Биология", "Физика", "Химия", "Математика", "Data Science", "Биотехнология"],
+        A: ["Дизайн", "Сәулет", "Журналистика", "Кино", "Музыка", "Жарнама", "Фотография", "Сән"],
+        S: ["Педагогика", "Психология", "Медицина", "Әлеуметтік жұмыс", "HR", "Туризм", "Аудармашылық"],
+        E: ["Бизнес", "Менеджмент", "Маркетинг", "Заң", "Саясаттану", "PR", "Қаржы", "Халықаралық қатынастар"],
+        C: ["Бухгалтерия", "Экономика", "Банк ісі", "Логистика", "Статистика", "Аудит", "Мемлекеттік басқару", "IT-әкімшілендіру"]
     };
 
-    const entAnalysisTexts = {
+    const entAnalysisTextsKk = {
+        "Физика – Математика": "Физика мен Математиканы таңдауыңыз инженерлік, IT және дәл ғылыми мамандықтарға өте жақсы сәйкес келеді.",
+        "Химия – Биология": "Химия мен Биологияны таңдау медицинаға, фармацевтикаға, биотехнологияға және экологияға жол ашады.",
+        "География – Математика": "География мен Математиканың үйлесімі геологияға, картографияға, экологияға және қала құрылысына қолайлы.",
+        "Информатика – Математика": "Информатика мен Математика IT-мансапқа өте жақсы үйлесім: бағдарламалау, Data Science, киберқауіпсіздік.",
+        "Шет тілі – Дүниежүзі тарихы": "Бұл пәндер халықаралық қатынастарға, аудармашылыққа және журналистикаға есік ашады.",
+        "География – Шет тілі": "Халықаралық бизнес, туризм және логистикаға арналған үйлесім.",
+        "Дүниежүзі тарихы – География": "Саясаттануға, халықаралық қатынастарға және журналистикаға қолайлы.",
+        "Қазақ тілі – Қазақ әдебиеті": "Филологияға, журналистикаға және оқытуға өте жақсы.",
+        "Орыс тілі – Орыс әдебиеті": "Филологияға, журналистикаға және оқытуға өте жақсы.",
+        "Шығармашылық емтихан": "Шығармашылық емтихан дизайнға, сәулетке, өнерге және медиаға жол ашады.",
+        "Биология – География": "Экологияға, географияға, туризмге және табиғатты пайдалануға қолайлы.",
+        "Химия – Физика": "Инженерияға, материалтануға және техникалық ғылымдарға тамаша таңдау.",
+        "Дүниежүзі тарихы – Құқық негіздері": "Заңға, саясаттануға және мемлекеттік басқаруға өте жақсы."
+    };
+
+    const entAnalysisTextsRu = {
         "Физика – Математика": "Ваш выбор Физики и Математики отлично подходит для инженерных, IT и точных научных специальностей.",
         "Химия – Биология": "Выбор Химии и Биологии открывает путь в медицину, фармацевтику, биотехнологии и экологию.",
         "География – Математика": "Сочетание Географии и Математики подходит для геологии, картографии, экологии и градостроительства.",
-        "Информатика – Математика": "Информатика с Математикой — идеальная комбинация для IT-карьеры: программирование, Data Science, кибербезопасность.",
-        "Иностранный язык – Всемирная история": "Эти предметы открывают двери в международные отношения, переводоведение и журналистику.",
-        "География – Иностранный язык": "Комбинация для международного бизнеса, туризма и логистики.",
-        "Всемирная история – География": "Подходит для политологии, международных отношений и журналистики.",
-        "Казахский язык – Казахская литература": "Идеально для филологии, журналистики и преподавания.",
-        "Русский язык – Русская литература": "Идеально для филологии, журналистики и преподавания.",
-        "Творческий экзамен": "Творческий экзамен открывает путь в дизайн, архитектуру, искусство и медиа.",
+        "Информатика – Математика": "Информатика и Математика — отличное сочетание для IT-карьеры: программирование, Data Science, кибербезопасность.",
+        "Шет тілі – Дүниежүзі тарихы": "Эти предметы открывают двери в международные отношения, переводческое дело и журналистику.",
+        "География – Шет тілі": "Сочетание для международного бизнеса, туризма и логистики.",
+        "Дүниежүзі тарихы – География": "Подходит для политологии, международных отношений и журналистики.",
+        "Қазақ тілі – Қазақ әдебиеті": "Отлично подходит для филологии, журналистики и преподавания.",
+        "Орыс тілі – Орыс әдебиеті": "Отлично подходит для филологии, журналистики и преподавания.",
+        "Шығармашылық емтихан": "Творческий экзамен открывает путь в дизайн, архитектуру, искусство и медиа.",
         "Биология – География": "Подходит для экологии, географии, туризма и природопользования.",
         "Химия – Физика": "Отличный выбор для инженерии, материаловедения и технических наук.",
-        "Всемирная история – Основы права": "Идеально для юриспруденции, политологии и государственного управления."
+        "Дүниежүзі тарихы – Құқық негіздері": "Отлично подходит для юриспруденции, политологии и государственного управления."
     };
+
+    const entAnalysisTexts = language === 'kk' ? entAnalysisTextsKk : entAnalysisTextsRu;
 
     const getScoreColor = (score, max) => {
         const pct = score / max;
@@ -419,7 +521,7 @@ function buildFullPdfHtml(results, studentInfo) {
     const entTexts = selectedENT.map(ent => entAnalysisTexts[ent] || '').filter(t => t);
     const entAnalysis = entTexts.length > 0
         ? entTexts.join(' ')
-        : 'Рекомендуем обсудить выбор профильных предметов с профориентатором.';
+        : t.entAnalysisDefault;
 
     return `
 <!DOCTYPE html>
@@ -530,19 +632,19 @@ function buildFullPdfHtml(results, studentInfo) {
             <img src="https://ku.arizona.cv/logos/arizona-logo-arizona.png" alt="Arizona">
             <img src="https://ku.arizona.cv/logos/ertis academy logo vertical for alfacrm.png" alt="Ertis">
         </div>
-        <div class="title">Результаты RIASEC теста</div>
-        <div class="student-info">${studentInfo?.name || ''} | ${new Date().toLocaleDateString('ru-RU')}</div>
+        <div class="title">${t.resultsTitle}</div>
+        <div class="student-info">${studentInfo?.name || ''} | ${new Date().toLocaleDateString(language === 'kk' ? 'kk-KZ' : 'ru-RU')}</div>
     </div>
 
     <div class="riasec-section">
-        <div class="riasec-label">Ваш тип личности RIASEC:</div>
+        <div class="riasec-label">${t.yourTypeTitle}</div>
         <div class="riasec-code">${code}</div>
         <div class="type-names">${typeNames}</div>
         <div class="description">${descriptions}</div>
     </div>
 
     <div class="scores-section">
-        <div class="section-title">Детальные результаты:</div>
+        <div class="section-title">${t.detailedResults}</div>
         ${sortedScores.map(([type, score]) => `
             <div class="score-row">
                 <div class="score-label">${type} - ${typeDescriptions[type]}</div>
@@ -555,14 +657,14 @@ function buildFullPdfHtml(results, studentInfo) {
     </div>
 
     <div class="majors-section">
-        <div class="section-title">Рекомендуемые специальности:</div>
+        <div class="section-title">${t.recommendedMajors}</div>
         <div class="majors-grid">
             ${majors.map(major => `<span class="major-tag">${major}</span>`).join('')}
         </div>
     </div>
 
     <div class="ent-section">
-        <div class="ent-title">Анализ профильных предметов:</div>
+        <div class="ent-title">${t.entAnalysisTitle}</div>
         <div class="ent-text">${entAnalysis}</div>
     </div>
 
