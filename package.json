@@ -1,13 +1,17 @@
 {
   "name": "arizona",
   "version": "1.0.0",
-  "description": "",
+  "description": "RIASEC Career Orientation Test Platform for Kozybayev University",
   "main": "riasec.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "start": "node pdf-server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["riasec", "career", "orientation", "test"],
+  "author": "Kozybayev University",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

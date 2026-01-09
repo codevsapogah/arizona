@@ -6,6 +6,23 @@ USER="ubuntu"
 PASS="0qyMw4XKWWX1S5WQzvsjgjI="
 REMOTE_PATH="/var/www/arizona"
 
+# Auto-bump version (patch by default)
+echo "Bumping version..."
+npm run version:patch
+NEW_VERSION=$(node -p "require('./package.json').version")
+echo "New version: v$NEW_VERSION"
+
+# Update version.js
+./update-version.sh
+
+# Commit version bump
+git add package.json version.js
+git commit -m "Bump version to v$NEW_VERSION" --no-verify 2>/dev/null || echo "No version changes to commit"
+
+# Push to GitHub
+echo "Pushing to GitHub..."
+git push origin main
+
 echo "Deploying to ku.arizona.cv..."
 
 # Fix ownership for upload
