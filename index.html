@@ -4,18 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Бесплатная профориентация в университете Аризона. Американский диплом в Казахстане.">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Бесплатная профориентация в университете Аризона</title>
     <link rel="icon" type="image/png" href="logos/UA_block_rgb-CARD_0.png 1.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
+    <script>
+        // Clear any cached redirect state on page load
+        if (window.formSubmitted) {
+            window.formSubmitted = false;
+        }
+    </script>
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <div class="header-logos">
-                <img src="logos/arizona-logo-ku.svg" alt="Kozybayev University" class="header-logo">
-                <img src="logos/arizona-logo-arizona.png" alt="University of Arizona" class="header-logo">
-                <img src="logos/ertis academy logo vertical for alfacrm.png" alt="Ertis Academy" class="header-logo">
+            <div class="header-content">
+                <div class="header-logos">
+                    <img src="logos/arizona-logo-ku.svg" alt="Kozybayev University" class="header-logo">
+                    <img src="logos/arizona-logo-arizona.png" alt="University of Arizona" class="header-logo">
+                    <img src="logos/ertis academy logo vertical for alfacrm.png" alt="Ertis Academy" class="header-logo">
+                </div>
+                <div class="language-selector">
+                    <button class="lang-btn active" data-lang="ru" onclick="switchLanguage('ru')">Русский</button>
+                    <button class="lang-btn" data-lang="kk" onclick="switchLanguage('kk')">Қазақша</button>
+                </div>
             </div>
         </div>
     </header>
@@ -25,12 +40,12 @@
         <div class="hero-overlay">
             <div class="container">
                 <div class="hero-content">
-                    <h1 class="hero-title">Американский диплом<br>в Казахстане</h1>
-                    <p class="hero-description">
+                    <h1 class="hero-title" id="heroTitle">Американский диплом<br>в Казахстане</h1>
+                    <p class="hero-description" id="heroDescription">
                         У нас есть партнерская программа с университетом Аризоны.<br>
                         Значит, можно поступить к нам, а в конце получить диплом, который будет котироваться не только в Казахстане.
                     </p>
-                    <a href="#form" class="cta-button">Бесплатная профориентация</a>
+                    <a href="#form" class="cta-button" id="ctaButton">Бесплатная профориентация</a>
                 </div>
             </div>
         </div>
@@ -44,16 +59,16 @@
                 <div class="info-column-left">
                     <!-- Card 1: Two Diplomas Text -->
                     <div class="info-card text-card">
-                        <h2 class="card-title">Два диплома</h2>
-                        <p class="card-description">
+                        <h2 class="card-title" id="twoDiplomasTitle">Два диплома</h2>
+                        <p class="card-description" id="twoDiplomasDesc">
                             Вы получаете <span class="highlight">два диплома</span>: от Козыбаев университета и Университета Аризоны
                         </p>
                     </div>
 
                     <!-- Card 3: How to Apply -->
                     <div class="info-card text-card how-to-apply-card">
-                        <h2 class="card-title">Как поступить?</h2>
-                        <p class="card-description">ЕНТ + владение английским языком</p>
+                        <h2 class="card-title" id="howToApplyTitle">Как поступить?</h2>
+                        <p class="card-description" id="howToApplyDesc">ЕНТ + владение английским языком</p>
                     </div>
                 </div>
 
@@ -129,43 +144,43 @@
     <!-- Advantages Section -->
     <section class="advantages-section">
         <div class="container">
-            <h2 class="section-title">Преимущества</h2>
+            <h2 class="section-title" id="advantagesTitle">Преимущества</h2>
             <div class="advantages-list">
                 <div class="advantage-item">
                     <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="#00B8D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p>Международное признание образовательных программ</p>
+                    <p id="advantage1">Международное признание образовательных программ</p>
                 </div>
                 <div class="advantage-item">
                     <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="#00B8D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p>Обучение в современных лабораториях и учебных комплексах</p>
+                    <p id="advantage2">Обучение в современных лабораториях и учебных комплексах</p>
                 </div>
                 <div class="advantage-item">
                     <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="#00B8D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p>Полный доступ к цифровым ресурсам Университета Аризоны</p>
+                    <p id="advantage3">Полный доступ к цифровым ресурсам Университета Аризоны</p>
                 </div>
                 <div class="advantage-item">
                     <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="#00B8D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p>Менторство от опытных ученых в различных областях</p>
+                    <p id="advantage4">Менторство от опытных ученых в различных областях</p>
                 </div>
                 <div class="advantage-item">
                     <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="#00B8D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p>Обучение у международного преподавательского состава</p>
+                    <p id="advantage5">Обучение у международного преподавательского состава</p>
                 </div>
                 <div class="advantage-item">
                     <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="#00B8D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p>Улучшение навыков английского языка</p>
+                    <p id="advantage6">Улучшение навыков английского языка</p>
                 </div>
             </div>
         </div>
@@ -176,8 +191,8 @@
         <div class="container">
             <div class="form-container">
                 <div class="form-left">
-                    <h2 class="form-main-title">РЕГИСТРАЦИЯ НА ПРОФОРИЕНТАЦИЮ</h2>
-                    <p class="form-subtitle">
+                    <h2 class="form-main-title" id="formTitle">РЕГИСТРАЦИЯ НА ПРОФОРИЕНТАЦИЮ</h2>
+                    <p class="form-subtitle" id="formSubtitle">
                         Заполните форму — получите бесплатную<br>
                         профориентацию, пробный тест на ЕНТ и разбор ошибок.
                     </p>
@@ -195,18 +210,13 @@
                     <script id="amoforms_script_1641690" async="async" charset="utf-8" src="https://forms.amocrm.ru/forms/assets/js/amoforms.js?1765319806"></script>
 
                     <script>
-                    // Multiple detection methods for amoCRM form submission
+                    // Detection methods for amoCRM form submission
+                    var formSubmitted = false;
 
-                    // Method 1: amoCRM loaded callback
-                    window.amo_forms_loaded = window.amo_forms_loaded || function(f, k) {
-                        window.amo_forms_loaded.f = (window.amo_forms_loaded.f || []).concat([[f, k]]);
-                    };
-                    amo_forms_loaded(function() {
-                        window.location.href = "https://ku.arizona.cv/riasec-test.html";
-                    });
-
-                    // Method 2: Listen for postMessage from amoCRM iframe
+                    // Method 1: Listen for postMessage from amoCRM iframe
                     window.addEventListener('message', function(event) {
+                        if (formSubmitted) return; // Prevent multiple redirects
+
                         if (event.origin.indexOf('amocrm') !== -1 || event.origin.indexOf('amo') !== -1) {
                             var data = event.data;
                             if (typeof data === 'string') {
@@ -214,28 +224,45 @@
                             }
                             // Check for success indicators
                             if (data && (data.event === 'submit' || data.type === 'submit' || data.status === 'success' || data.success)) {
+                                formSubmitted = true;
                                 window.location.href = "https://ku.arizona.cv/riasec-test.html";
                             }
                         }
                     });
 
-                    // Method 3: Watch for iframe height changes (amoCRM resizes on success)
-                    var lastHeight = 0;
-                    var heightCheckCount = 0;
-                    setInterval(function() {
-                        var iframes = document.querySelectorAll('iframe[src*="amocrm"], iframe[src*="amo"]');
-                        iframes.forEach(function(iframe) {
-                            try {
-                                var h = iframe.offsetHeight || iframe.clientHeight;
-                                if (lastHeight > 0 && h < lastHeight * 0.5 && heightCheckCount > 10) {
-                                    // Significant height reduction might indicate success message
-                                    window.location.href = "https://ku.arizona.cv/riasec-test.html";
+                    // Method 2: Watch for success message or confirmation display in iframe
+                    var checkInterval;
+                    window.amo_forms_loaded = window.amo_forms_loaded || function(f, k) {
+                        window.amo_forms_loaded.f = (window.amo_forms_loaded.f || []).concat([[f, k]]);
+                    };
+                    amo_forms_loaded(function() {
+                        // Start monitoring only after form is loaded
+                        checkInterval = setInterval(function() {
+                            if (formSubmitted) {
+                                clearInterval(checkInterval);
+                                return;
+                            }
+
+                            var iframes = document.querySelectorAll('iframe[src*="amocrm"], iframe[src*="amo"]');
+                            iframes.forEach(function(iframe) {
+                                try {
+                                    // Check if iframe contains success message text
+                                    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                                    if (iframeDoc && iframeDoc.body) {
+                                        var bodyText = iframeDoc.body.innerText || iframeDoc.body.textContent || '';
+                                        if (bodyText.indexOf('спасибо') !== -1 || bodyText.indexOf('успешно') !== -1 ||
+                                            bodyText.toLowerCase().indexOf('thank') !== -1 || bodyText.toLowerCase().indexOf('success') !== -1) {
+                                            formSubmitted = true;
+                                            clearInterval(checkInterval);
+                                            window.location.href = "https://ku.arizona.cv/riasec-test.html";
+                                        }
+                                    }
+                                } catch(e) {
+                                    // Cross-origin restrictions prevent direct access, rely on postMessage
                                 }
-                                lastHeight = h;
-                                heightCheckCount++;
-                            } catch(e) {}
-                        });
-                    }, 500);
+                            });
+                        }, 1000);
+                    });
                     </script>
 
                     <!-- Original form (disabled)
@@ -307,6 +334,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="version.js"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

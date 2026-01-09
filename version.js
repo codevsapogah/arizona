@@ -7,8 +7,8 @@ function displayVersion() {
     const footers = document.querySelectorAll('.site-footer p');
     footers.forEach(footer => {
         if (footer.textContent.includes('Career Vision')) {
-            // Add version after "Career Vision | 2025"
-            const versionSpan = ` | <span style="color: #00B8D4;">v${APP_VERSION}</span>`;
+            // Add version on a new line at the very bottom
+            const versionSpan = `<br><span style="color: #00B8D4; font-size: 0.9em;">v${APP_VERSION}</span>`;
 
             // Replace text, handling potential line breaks
             if (!footer.innerHTML.includes(versionSpan)) {
