@@ -1,7 +1,10 @@
 // RIASEC Test Data and Logic
 
-// Test Questions
-const questions = [
+// Language state
+let currentLanguage = 'ru'; // Default language is Russian
+
+// Test Questions - Russian
+const questionsRu = [
     {
         id: 1,
         text: "1. Что я предпочитаю делать руками?",
@@ -144,6 +147,153 @@ const questions = [
     }
 ];
 
+// Test Questions - Kazakh
+const questionsKk = [
+    {
+        id: 1,
+        text: "1. Мен қолмен не істегенді ұнатамын?",
+        options: [
+            { value: 'a', text: 'Бұзылған жабдықтарды жөндеу', type: 'R' },
+            { value: 'b', text: 'Гүл өсіру немесе жануарларға күтім жасау', type: 'I' },
+            { value: 'c', text: 'Адамдарға жаңа дағдыларды үйрету', type: 'S' },
+            { value: 'd', text: 'Мақалалар жазу немесе бағдарламалар әзірлеу', type: 'C' },
+            { value: 'e', text: 'Сурет салу, музыка шығару немесе дизайн жасау', type: 'A' },
+            { value: 'f', text: 'Келіссөз жүргізу және адамдарды көндіру', type: 'E' }
+        ]
+    },
+    {
+        id: 2,
+        text: "2. Қай ортада мен өзімді жайлы сезінемін?",
+        options: [
+            { value: 'a', text: 'Физикалық еңбекпен айналысатын шағын топта', type: 'R' },
+            { value: 'b', text: 'Жалғыз немесе зерттеумен айналысатын шағын топта', type: 'I' },
+            { value: 'c', text: 'Ортақ мақсатпен жұмыс істейтін үлкен командада', type: 'S' },
+            { value: 'd', text: 'Деректерді талдау қажет болатын командада', type: 'C' },
+            { value: 'e', text: 'Шығармашылық еркіндік бағаланатын ортада', type: 'A' },
+            { value: 'f', text: 'Басқарып, мотивация бере алатын командада', type: 'E' }
+        ]
+    },
+    {
+        id: 3,
+        text: "3. Мен жұмыс барысында нені бағалаймын?",
+        options: [
+            { value: 'a', text: 'Тұрақтылық пен нақты нұсқауларды', type: 'R' },
+            { value: 'b', text: 'Үнемі үйрену және зерттеу мүмкіндігін', type: 'I' },
+            { value: 'c', text: 'Адамдарға және қоғамға көмектесуді', type: 'S' },
+            { value: 'd', text: 'Жүйелеу және есеп жүргізу мүмкіндігін', type: 'C' },
+            { value: 'e', text: 'Өз идеяларымды еркін білдіруді', type: 'A' },
+            { value: 'f', text: 'Билік, мәртебе және қаржылық табысты', type: 'E' }
+        ]
+    },
+    {
+        id: 4,
+        text: "4. Мектепте қай пән маған оңай болды?",
+        options: [
+            { value: 'a', text: 'Дене шынықтыру, технология, еңбек', type: 'R' },
+            { value: 'b', text: 'Химия, физика, биология, информатика', type: 'I' },
+            { value: 'c', text: 'Тарих, қоғамтану, әдебиет', type: 'S' },
+            { value: 'd', text: 'Математика, сызу, шет тілдері', type: 'C' },
+            { value: 'e', text: 'Бейнелеу өнері, музыка, театр', type: 'A' },
+            { value: 'f', text: 'Экономика, құқық, география', type: 'E' }
+        ]
+    },
+    {
+        id: 5,
+        text: "5. Менің сүйікті хоббиім",
+        options: [
+            { value: 'a', text: 'Спортпен айналысу, көлік жүргізу, құралдармен жұмыс істеу', type: 'R' },
+            { value: 'b', text: 'Ғылыми кітаптар оқу, логикалық тапсырмалар шешу', type: 'I' },
+            { value: 'c', text: 'Волонтер болу, достарға арналған іс-шаралар ұйымдастыру', type: 'S' },
+            { value: 'd', text: 'Бюджет құру, шахмат ойнау', type: 'C' },
+            { value: 'e', text: 'Фотосуретке түсіру, өлең жазу', type: 'A' },
+            { value: 'f', text: 'Адамдарға бір нәрсе сату, пікірталасқа түсу', type: 'E' }
+        ]
+    },
+    {
+        id: 6,
+        text: "6. Менің негізгі қасиетім",
+        options: [
+            { value: 'a', text: 'Практикалық және төзімділік', type: 'R' },
+            { value: 'b', text: 'Қызығушылық пен аналитикалық ойлау', type: 'I' },
+            { value: 'c', text: 'Эмпатия және қарым-қатынасқа бейімділік', type: 'S' },
+            { value: 'd', text: 'Нақтылық және ұйымдастырушылық', type: 'C' },
+            { value: 'e', text: 'Қиял мен бірегейлік', type: 'A' },
+            { value: 'f', text: 'Сенімділік пен талпыныс', type: 'E' }
+        ]
+    },
+    {
+        id: 7,
+        text: "7. Қандай мәселені шешуді таңдар едім?",
+        options: [
+            { value: 'a', text: 'Машинаның өнімділігін қалай арттыруға болады', type: 'R' },
+            { value: 'b', text: 'Белгілі бір құбылыс неліктен болады', type: 'I' },
+            { value: 'c', text: 'Қиын жағдайдағы адамға қалай көмектесуге болады', type: 'S' },
+            { value: 'd', text: 'Үлкен деректер көлемін қалай реттеуге болады', type: 'C' },
+            { value: 'e', text: 'Әдемі әрі ерекше затты қалай жасауға болады', type: 'A' },
+            { value: 'f', text: 'Адамдар тобын өз шешімімді қабылдауға қалай көндіруге болады', type: 'E' }
+        ]
+    },
+    {
+        id: 8,
+        text: "8. Қай мамандық сипаттамасы маған қызық?",
+        options: [
+            { value: 'a', text: 'Ашық ауада немесе техникамен жұмыс істейтін маман', type: 'R' },
+            { value: 'b', text: 'Зертханада жұмыс істейтін ғалым немесе зерттеуші', type: 'I' },
+            { value: 'c', text: 'Мұғалім, дәрігер немесе әлеуметтік қызметкер', type: 'S' },
+            { value: 'd', text: 'Бухгалтер, аудитор немесе құжат айналымы маманы', type: 'C' },
+            { value: 'e', text: 'Дизайнер, актер немесе жазушы', type: 'A' },
+            { value: 'f', text: 'Менеджер, саясаткер немесе кәсіпкер', type: 'E' }
+        ]
+    },
+    {
+        id: 9,
+        text: "9. Жұмыс орнында мен үшін не маңызды?",
+        options: [
+            { value: 'a', text: 'Физикалық белсенділік және нәтижені көру', type: 'R' },
+            { value: 'b', text: 'Тыныштық пен шоғырлану мүмкіндігі', type: 'I' },
+            { value: 'c', text: 'Адамдармен белсенді қарым-қатынас', type: 'S' },
+            { value: 'd', text: 'Құрылым, тәртіп, мұрағаттар мен құжаттама', type: 'C' },
+            { value: 'e', text: 'Еркін кесте және ерекше интерьер', type: 'A' },
+            { value: 'f', text: 'Шешім қабылдау және жауапкершілік алу', type: 'E' }
+        ]
+    },
+    {
+        id: 10,
+        text: "10. 10 жылдан кейін өзімді кім ретінде көремін?",
+        options: [
+            { value: 'a', text: 'Қолы алтын кәсіби шебер маман', type: 'R' },
+            { value: 'b', text: 'Тар саладағы мойындалған сарапшы', type: 'I' },
+            { value: 'c', text: 'Тәлімгер немесе қоғамдық ұйым жетекшісі', type: 'S' },
+            { value: 'd', text: 'Бақылау немесе есеп беру жөніндегі бас маман', type: 'C' },
+            { value: 'e', text: 'Танымал туынды немесе бренд жасаушы', type: 'A' },
+            { value: 'f', text: 'Өз компаниясының иесі немесе директоры', type: 'E' }
+        ]
+    },
+    {
+        id: 11,
+        text: "Таңдау пәндеріңіз",
+        multiple: true,
+        options: [
+            { value: 'a', text: 'Физика – Математика' },
+            { value: 'b', text: 'Химия – Биология' },
+            { value: 'c', text: 'География – Математика' },
+            { value: 'd', text: 'Информатика – Математика' },
+            { value: 'e', text: 'Шет тілі – Дүниежүзі тарихы' },
+            { value: 'f', text: 'География – Шет тілі' },
+            { value: 'g', text: 'Дүниежүзі тарихы – География' },
+            { value: 'h', text: 'Қазақ тілі – Қазақ әдебиеті' },
+            { value: 'i', text: 'Орыс тілі – Орыс әдебиеті' },
+            { value: 'j', text: 'Шығармашылық емтихан' },
+            { value: 'k', text: 'Биология – География' },
+            { value: 'l', text: 'Химия – Физика' },
+            { value: 'm', text: 'Дүниежүзі тарихы – Құқық негіздері' }
+        ]
+    }
+];
+
+// Active questions array (will switch based on language)
+let questions = questionsRu;
+
 // Majors by type
 const majorsByType = {
     R: [
@@ -199,8 +349,46 @@ const majorsByCombo = {
     "AI": ["Архитектор", "UI/UX + аналитика продукта", "Креатив в IT"]
 };
 
-// Type descriptions
-const typeDescriptions = {
+// UI Translations
+const translations = {
+    ru: {
+        progressText: "Вопрос",
+        of: "из",
+        prevBtn: "Назад",
+        nextBtn: "Далее",
+        submitBtn: "Завершить тест",
+        resultsTitle: "Результаты теста",
+        yourTypeTitle: "Ваш тип личности RIASEC:",
+        recommendedMajors: "Рекомендуемые специальности:",
+        entAnalysisTitle: "Анализ профильных предметов:",
+        entMatchYes: "Ваш выбор профильных предметов хорошо согласуется с вашим типом личности. Это усиливает результат теста.",
+        entMatchNo: "Текущий выбор профильных предметов отличается от вашего профиля. Можно обсудить это с профориентатором.",
+        downloadPdf: "📄 Скачать результаты в PDF",
+        creatingPdf: "Создание PDF...",
+        pleaseAnswer: "Пожалуйста, ответьте на все вопросы",
+        pdfError: "Произошла ошибка при создании PDF. Убедитесь, что сервер запущен."
+    },
+    kk: {
+        progressText: "Сұрақ",
+        of: "-ден",
+        prevBtn: "Артқа",
+        nextBtn: "Әрі қарай",
+        submitBtn: "Тестті аяқтау",
+        resultsTitle: "Тест нәтижелері",
+        yourTypeTitle: "Сіздің RIASEC тұлға түріңіз:",
+        recommendedMajors: "Ұсынылатын мамандықтар:",
+        entAnalysisTitle: "Таңдау пәндерінің талдауы:",
+        entMatchYes: "Сіздің таңдау пәндеріңіз тұлға түріңізбен жақсы сәйкес келеді. Бұл тест нәтижесін күшейтеді.",
+        entMatchNo: "Ағымдағы таңдау пәндері сіздің профиліңізден ерекшеленеді. Мұны профориентатормен талқылауға болады.",
+        downloadPdf: "📄 Нәтижелерді PDF форматында жүктеу",
+        creatingPdf: "PDF құрылуда...",
+        pleaseAnswer: "Барлық сұрақтарға жауап беріңіз",
+        pdfError: "PDF құру кезінде қате пайда болды. Сервер іске қосылғанына көз жеткізіңіз."
+    }
+};
+
+// Type descriptions - Russian
+const typeDescriptionsRu = {
     R: "Реалистичный",
     I: "Исследовательский",
     A: "Артистичный",
@@ -209,8 +397,21 @@ const typeDescriptions = {
     C: "Системный"
 };
 
-// Full descriptions
-const fullDescriptions = {
+// Type descriptions - Kazakh
+const typeDescriptionsKk = {
+    R: "Шынайы",
+    I: "Зерттеушілік",
+    A: "Көркемдік",
+    S: "Әлеуметтік",
+    E: "Кәсіпкерлік",
+    C: "Жүйелік"
+};
+
+// Active type descriptions
+let typeDescriptions = typeDescriptionsRu;
+
+// Full descriptions - Russian
+const fullDescriptionsRu = {
     R: "Вы практичны и любите работать руками. Вам нравится создавать реальные вещи и видеть результат своей работы.",
     I: "Вы аналитичны и любознательны. Вам нравится исследовать, анализировать и понимать, как всё работает.",
     A: "Вы креативны и оригинальны. Вам нравится создавать что-то новое и выражать свои идеи.",
@@ -218,6 +419,19 @@ const fullDescriptions = {
     E: "Вы амбициозны и уверены в себе. Вам нравится руководить, убеждать и достигать целей.",
     C: "Вы организованны и внимательны к деталям. Вам нравится систематизировать информацию и работать с данными."
 };
+
+// Full descriptions - Kazakh
+const fullDescriptionsKk = {
+    R: "Сіз практикалықсыз және қолмен жұмыс істеуді жақсы көресіз. Сіз нақты заттар жасауды және жұмысыңыздың нәтижесін көруді ұнатасыз.",
+    I: "Сіз аналитикалықсыз және қызығушысыз. Сіз зерттеуді, талдауды және бәрі қалай жұмыс істейтінін түсінуді ұнатасыз.",
+    A: "Сіз креативтісіз және өзгешесіз. Сіз жаңа нәрсе жасауды және идеяларыңызды білдіруді ұнатасыз.",
+    S: "Сіз эмпатиялысыз және қарым-қатынасшылсыз. Сіз адамдарға көмектесуді және командада жұмыс істеуді ұнатасыз.",
+    E: "Сіз амбициялысыз және өзіңізге сенімдісіз. Сіз басқаруды, көндіруді және мақсаттарға жетуді ұнатасыз.",
+    C: "Сіз ұйымдастырылғансыз және егжей-тегжейлерге мұқият қарайсыз. Сіз ақпаратты жүйелеуді және деректермен жұмыс істеуді ұнатасыз."
+};
+
+// Active full descriptions
+let fullDescriptions = fullDescriptionsRu;
 
 // ENT profiles matching RIASEC types
 const entProfilesByType = {
@@ -233,6 +447,70 @@ const entProfilesByType = {
 let studentInfo = {};
 let currentQuestionIndex = 0;
 let answers = {};
+let preGeneratedPdfUrl = null;
+let preGeneratedPdfFilename = null;
+
+// Language switcher function
+function switchLanguage(lang) {
+    currentLanguage = lang;
+
+    // Switch questions array
+    if (lang === 'kk') {
+        questions = questionsKk;
+        typeDescriptions = typeDescriptionsKk;
+        fullDescriptions = fullDescriptionsKk;
+    } else {
+        questions = questionsRu;
+        typeDescriptions = typeDescriptionsRu;
+        fullDescriptions = fullDescriptionsRu;
+    }
+
+    // Update UI text
+    updateUIText();
+
+    // Re-render current question if in test section
+    if (document.getElementById('test-section').classList.contains('active')) {
+        renderQuestion();
+    }
+
+    // Update button active states
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+}
+
+// Update UI text based on current language
+function updateUIText() {
+    const t = translations[currentLanguage];
+
+    // Update buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const downloadBtn = document.getElementById('downloadPdfBtn');
+
+    if (prevBtn) prevBtn.textContent = t.prevBtn;
+    if (nextBtn) nextBtn.textContent = t.nextBtn;
+    if (submitBtn) submitBtn.textContent = t.submitBtn;
+    if (downloadBtn) downloadBtn.textContent = t.downloadPdf;
+
+    // Update total questions
+    document.getElementById('totalQuestions').textContent = questions.length;
+
+    // Update results section if visible
+    if (document.getElementById('results-section').classList.contains('active')) {
+        const resultsTitle = document.getElementById('resultsTitle');
+        const yourTypeTitle = document.getElementById('yourTypeTitle');
+        const recommendedMajorsTitle = document.getElementById('recommendedMajorsTitle');
+        const entAnalysisTitle = document.getElementById('entAnalysisTitle');
+
+        if (resultsTitle) resultsTitle.textContent = t.resultsTitle;
+        if (yourTypeTitle) yourTypeTitle.textContent = t.yourTypeTitle;
+        if (recommendedMajorsTitle) recommendedMajorsTitle.textContent = t.recommendedMajors;
+        if (entAnalysisTitle) entAnalysisTitle.textContent = t.entAnalysisTitle;
+    }
+}
 
 // Function to start test after form submission (called from amoCRM callback)
 window.startTestAfterForm = function() {
@@ -381,6 +659,13 @@ function updateProgress() {
     const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
     document.getElementById('progressBar').style.width = progress + '%';
     document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+
+    // Update progress text
+    const t = translations[currentLanguage];
+    const progressTextElement = document.querySelector('.progress-text');
+    if (progressTextElement) {
+        progressTextElement.innerHTML = `${t.progressText} <span id="currentQuestion">${currentQuestionIndex + 1}</span> ${t.of} <span id="totalQuestions">${questions.length}</span>`;
+    }
 }
 
 function updateButtons() {
@@ -413,7 +698,7 @@ function submitTest(e) {
     // Validate all questions answered
     for (let i = 1; i <= questions.length; i++) {
         if (!answers[i] || (Array.isArray(answers[i]) && answers[i].length === 0)) {
-            alert('Пожалуйста, ответьте на все вопросы');
+            alert(translations[currentLanguage].pleaseAnswer);
             return;
         }
     }
@@ -513,21 +798,72 @@ function displayResults(results) {
     // Check if any selected subject matches the top RIASEC type
     const hasMatch = selectedSubjects.some(subj => matchingProfiles.includes(subj));
 
+    const t = translations[currentLanguage];
     if (hasMatch) {
-        document.getElementById('entAnalysis').textContent =
-            'Ваш выбор профильных предметов хорошо согласуется с вашим типом личности. Это усиливает результат теста.';
+        document.getElementById('entAnalysis').textContent = t.entMatchYes;
     } else {
-        document.getElementById('entAnalysis').textContent =
-            'Текущий выбор профильных предметов отличается от вашего профиля. Можно обсудить это с профориентатором.';
+        document.getElementById('entAnalysis').textContent = t.entMatchNo;
     }
 
     // Store results globally
     window.testResults = results;
 
+    // Pre-generate PDF for instant download
+    preGeneratePDF(results);
+
     // Final scroll to top after everything is rendered
     setTimeout(() => {
         window.scrollTo(0, 0);
     }, 50);
+}
+
+// Pre-generate PDF in background for instant download
+async function preGeneratePDF(results) {
+    try {
+        // Check ENT match for results
+        const topType = results.top3[0][0];
+        const matchingProfiles = entProfilesByType[topType] || [];
+        const selectedSubjects = results.entSubjects || [];
+        const entMatch = selectedSubjects.some(subj => matchingProfiles.includes(subj));
+
+        const response = await fetch('http://localhost:3002/generate-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                results: {
+                    code: results.code,
+                    scores: results.scores,
+                    majors: results.majors,
+                    entMatch: entMatch
+                },
+                studentInfo: studentInfo,
+                language: currentLanguage
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Server error');
+        }
+
+        const blob = await response.blob();
+
+        // Clean up old PDF URL if exists
+        if (preGeneratedPdfUrl) {
+            URL.revokeObjectURL(preGeneratedPdfUrl);
+        }
+
+        // Store the pre-generated PDF
+        preGeneratedPdfUrl = URL.createObjectURL(blob);
+        const randomId = Math.random().toString(36).substring(2, 10);
+        preGeneratedPdfFilename = `RIASEC_${randomId}.pdf`;
+
+        console.log('PDF pre-generated successfully');
+    } catch (error) {
+        console.error('Error pre-generating PDF:', error);
+        // Don't show error to user, they can still generate on demand
+    }
 }
 
 // Helper function to render Cyrillic text as image for PDF
@@ -593,7 +929,21 @@ function textToImage(text, options = {}) {
 async function generatePDF() {
     const btn = document.getElementById('downloadPdfBtn');
     const originalText = btn.textContent;
-    btn.textContent = 'Создание PDF...';
+    const t = translations[currentLanguage];
+
+    // If PDF is pre-generated, download it instantly
+    if (preGeneratedPdfUrl && preGeneratedPdfFilename) {
+        const a = document.createElement('a');
+        a.href = preGeneratedPdfUrl;
+        a.download = preGeneratedPdfFilename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+    }
+
+    // Otherwise, generate on demand
+    btn.textContent = t.creatingPdf;
     btn.disabled = true;
 
     try {
@@ -605,7 +955,7 @@ async function generatePDF() {
         const selectedSubjects = results.entSubjects || [];
         const entMatch = selectedSubjects.some(subj => matchingProfiles.includes(subj));
 
-        const response = await fetch('/generate-pdf', {
+        const response = await fetch('http://localhost:3002/generate-pdf', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -617,7 +967,8 @@ async function generatePDF() {
                     majors: results.majors,
                     entMatch: entMatch
                 },
-                studentInfo: studentInfo
+                studentInfo: studentInfo,
+                language: currentLanguage
             })
         });
 
@@ -639,7 +990,7 @@ async function generatePDF() {
 
     } catch (error) {
         console.error('Error generating PDF:', error);
-        alert('Произошла ошибка при создании PDF. Убедитесь, что сервер запущен.');
+        alert(t.pdfError);
     } finally {
         btn.textContent = originalText;
         btn.disabled = false;

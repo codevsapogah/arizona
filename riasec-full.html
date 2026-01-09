@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIASEC Толық Профориентациялық Тест</title>
+    <link rel="icon" type="image/png" href="logos/UA_block_rgb-CARD_0.png 1.png">
+    <link rel="stylesheet" href="riasec-style.css?v=2">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Test Questions -->
+        <section id="test-section" class="section active">
+            <div class="language-selector">
+                <button class="lang-btn" data-lang="ru" onclick="switchLanguage('ru')">Русский</button>
+                <button class="lang-btn active" data-lang="kk" onclick="switchLanguage('kk')">Қазақша</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <p class="progress-text" id="progressText">Сұрақ <span id="currentQuestion">1</span> / <span id="totalQuestions">51</span></p>
+
+            <form id="testForm">
+                <!-- Questions will be injected by JavaScript -->
+                <div id="questionsContainer"></div>
+
+                <div class="button-group">
+                    <button type="button" id="prevBtn" class="btn-secondary" style="visibility: hidden;">Артқа</button>
+                    <button type="button" id="nextBtn" class="btn-primary">Келесі</button>
+                    <button type="submit" id="submitBtn" class="btn-primary" style="display: none;">Тестті аяқтау</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="section">
+            <div class="header-logos">
+                <img src="logos/arizona-logo-ku.svg" alt="Kozybayev University" class="logo">
+                <img src="logos/arizona-logo-arizona.png" alt="University of Arizona" class="logo">
+                <img src="logos/ertis academy logo vertical for alfacrm.png" alt="Ertis Academy" class="logo">
+            </div>
+
+            <h1 id="resultsTitle">Тест нәтижелері</h1>
+
+            <div class="results-card">
+                <div class="riasec-code">
+                    <h2 id="yourTypeTitle">Сіздің RIASEC тұлға типіңіз:</h2>
+                    <div class="code-display" id="riasecCode"></div>
+                    <p class="code-description" id="codeDescription"></p>
+                </div>
+
+                <div class="scores-chart" id="scoresChart"></div>
+
+                <div class="majors-list">
+                    <h3 id="recommendedMajorsTitle">Ұсынылатын мамандықтар:</h3>
+                    <div id="majorsList"></div>
+                </div>
+
+                <div class="ent-analysis">
+                    <h3 id="entAnalysisTitle">Таңдау пәндерін талдау:</h3>
+                    <p id="entAnalysis"></p>
+                </div>
+
+                <button id="downloadPdfBtn" class="btn-primary btn-large">
+                    📄 Нәтижелерді PDF форматында жүктеп алу
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>Kozybayev University | Arizona University<br>Career Vision | 2025</p>
+        </div>
+    </footer>
+
+    <script src="riasec-full.js"></script>
+</body>
+</html>
