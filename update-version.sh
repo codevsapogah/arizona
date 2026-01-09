@@ -3,30 +3,41 @@
 
 VERSION=$(node -p "require('./package.json').version")
 
-cat > version.js << EOF
+cat > version.js << 'ENDOFFILE'
 // Version display utility
 // Auto-generated from package.json version
-const APP_VERSION = '$VERSION';
+const APP_VERSION = 'VERSION_PLACEHOLDER';
 
 // Display version in footer
 function displayVersion() {
     const footers = document.querySelectorAll('.site-footer p');
     footers.forEach(footer => {
         if (footer.textContent.includes('Career Vision')) {
-            footer.innerHTML = footer.innerHTML.replace(
-                'Career Vision | 2025',
-                \`Career Vision | 2025 | <span style="color: #00B8D4;">v\${APP_VERSION}</span>\`
-            );
+            // Add version after "Career Vision | 2025"
+            const versionSpan = ` | <span style="color: #00B8D4;">v${APP_VERSION}</span>`;
+
+            // Replace text, handling potential line breaks
+            if (!footer.innerHTML.includes(versionSpan)) {
+                footer.innerHTML = footer.innerHTML.replace(
+                    /(Career Vision \| 2025)/,
+                    `$1${versionSpan}`
+                );
+            }
         }
     });
 }
 
-// Run on page load
+// Run on page load with delay to ensure DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', displayVersion);
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(displayVersion, 100);
+    });
 } else {
-    displayVersion();
+    setTimeout(displayVersion, 100);
 }
-EOF
+ENDOFFILE
+
+# Replace placeholder with actual version
+sed -i '' "s/VERSION_PLACEHOLDER/$VERSION/g" version.js
 
 echo "Updated version.js to v$VERSION"
