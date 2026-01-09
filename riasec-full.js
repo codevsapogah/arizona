@@ -1227,7 +1227,7 @@ async function generatePDF() {
     try {
         const results = window.testResults;
 
-        const response = await fetch('http://localhost:3002/generate-riasec-full-pdf', {
+        const response = await fetch('/generate-riasec-full-pdf', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

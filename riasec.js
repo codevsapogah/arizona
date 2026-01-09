@@ -826,7 +826,7 @@ async function preGeneratePDF(results) {
         const selectedSubjects = results.entSubjects || [];
         const entMatch = selectedSubjects.some(subj => matchingProfiles.includes(subj));
 
-        const response = await fetch('http://localhost:3002/generate-pdf', {
+        const response = await fetch('/generate-pdf', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -955,7 +955,7 @@ async function generatePDF() {
         const selectedSubjects = results.entSubjects || [];
         const entMatch = selectedSubjects.some(subj => matchingProfiles.includes(subj));
 
-        const response = await fetch('http://localhost:3002/generate-pdf', {
+        const response = await fetch('/generate-pdf', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
