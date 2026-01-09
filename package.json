@@ -1,6 +1,6 @@
 {
   "name": "arizona",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "RIASEC Career Orientation Test Platform for Kozybayev University",
   "main": "riasec.js",
   "scripts": {
@@ -10,7 +10,12 @@
     "version:major": "npm version major --no-git-tag-version",
     "start": "node pdf-server.js"
   },
-  "keywords": ["riasec", "career", "orientation", "test"],
+  "keywords": [
+    "riasec",
+    "career",
+    "orientation",
+    "test"
+  ],
   "author": "Kozybayev University",
   "license": "ISC",
   "type": "commonjs",
