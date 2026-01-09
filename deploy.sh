@@ -35,7 +35,11 @@ rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'deploy.sh' --no-
 
 # Fix permissions and restart services
 sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no $USER@$SERVER "
+  sudo chown -R ubuntu:www-data $REMOTE_PATH
   sudo chmod -R 755 $REMOTE_PATH
+  sudo find $REMOTE_PATH -type f -name '*.html' -exec chmod 644 {} \;
+  sudo find $REMOTE_PATH -type f -name '*.js' -exec chmod 644 {} \;
+  sudo find $REMOTE_PATH -type f -name '*.css' -exec chmod 644 {} \;
   pm2 restart arizona-pdf
   sudo systemctl restart nginx
 "
