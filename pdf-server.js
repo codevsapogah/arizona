@@ -27,7 +27,7 @@ app.post('/generate-pdf', async (req, res) => {
         await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10000 });
 
         // Wait for fonts to load
-        await page.waitForTimeout(500);
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
@@ -376,7 +376,7 @@ app.post('/generate-riasec-full-pdf', async (req, res) => {
         await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10000 });
 
         // Wait for fonts to load
-        await page.waitForTimeout(500);
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
