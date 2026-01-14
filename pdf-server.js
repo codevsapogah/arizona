@@ -24,7 +24,10 @@ app.post('/generate-pdf', async (req, res) => {
         // Build HTML with language support
         const html = buildPdfHtml(results, studentInfo, language || 'ru');
 
-        await page.setContent(html, { waitUntil: 'networkidle0' });
+        await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10000 });
+
+        // Wait for fonts to load
+        await page.waitForTimeout(500);
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
@@ -370,7 +373,10 @@ app.post('/generate-riasec-full-pdf', async (req, res) => {
         // Build HTML for full test with language support
         const html = buildFullPdfHtml(results, studentInfo, language || 'kk');
 
-        await page.setContent(html, { waitUntil: 'networkidle0' });
+        await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10000 });
+
+        // Wait for fonts to load
+        await page.waitForTimeout(500);
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
