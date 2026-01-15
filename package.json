@@ -1,6 +1,6 @@
 {
   "name": "arizona",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "RIASEC Career Orientation Test Platform for Kozybayev University",
   "main": "riasec.js",
   "scripts": {

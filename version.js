@@ -1,6 +1,6 @@
 // Version display utility
 // Auto-generated from package.json version
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 
 // Display version in footer
 function displayVersion() {
