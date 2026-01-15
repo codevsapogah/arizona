@@ -15,8 +15,15 @@ app.post('/generate-pdf', async (req, res) => {
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+            // Use Puppeteer's bundled Chrome (more reliable than system chromium)
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-software-rasterizer',
+                '--disable-extensions'
+            ]
         });
 
         const page = await browser.newPage();
@@ -24,10 +31,10 @@ app.post('/generate-pdf', async (req, res) => {
         // Build HTML with language support
         const html = buildPdfHtml(results, studentInfo, language || 'ru');
 
-        await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10000 });
+        await page.setContent(html, { waitUntil: 'load', timeout: 5000 });
 
-        // Wait for fonts to load
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Brief wait for rendering (no external fonts to load)
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
@@ -45,8 +52,12 @@ app.post('/generate-pdf', async (req, res) => {
         res.send(pdfBuffer);
 
     } catch (error) {
-        console.error('PDF generation error:', error);
-        res.status(500).json({ error: 'Failed to generate PDF' });
+        console.error('PDF generation error:', error.message);
+        console.error('Error stack:', error.stack);
+        res.status(500).json({
+            error: 'Failed to generate PDF',
+            message: error.message
+        });
     }
 });
 
@@ -128,7 +139,7 @@ function buildPdfHtml(results, studentInfo, language = 'ru') {
 <head>
     <meta charset="UTF-8">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        /* Using system fonts for reliable PDF generation without network dependency */
 
         * {
             margin: 0;
@@ -137,7 +148,7 @@ function buildPdfHtml(results, studentInfo, language = 'ru') {
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             color: #2c3e50;
             line-height: 1.5;
             padding: 20px;
@@ -364,8 +375,15 @@ app.post('/generate-riasec-full-pdf', async (req, res) => {
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+            // Use Puppeteer's bundled Chrome (more reliable than system chromium)
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-software-rasterizer',
+                '--disable-extensions'
+            ]
         });
 
         const page = await browser.newPage();
@@ -373,10 +391,10 @@ app.post('/generate-riasec-full-pdf', async (req, res) => {
         // Build HTML for full test with language support
         const html = buildFullPdfHtml(results, studentInfo, language || 'kk');
 
-        await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10000 });
+        await page.setContent(html, { waitUntil: 'load', timeout: 5000 });
 
-        // Wait for fonts to load
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Brief wait for rendering (no external fonts to load)
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
@@ -393,8 +411,12 @@ app.post('/generate-riasec-full-pdf', async (req, res) => {
         res.send(pdfBuffer);
 
     } catch (error) {
-        console.error('PDF generation error:', error);
-        res.status(500).json({ error: 'Failed to generate PDF' });
+        console.error('PDF generation error:', error.message);
+        console.error('Error stack:', error.stack);
+        res.status(500).json({
+            error: 'Failed to generate PDF',
+            message: error.message
+        });
     }
 });
 
@@ -535,12 +557,12 @@ function buildFullPdfHtml(results, studentInfo, language = 'kk') {
 <head>
     <meta charset="UTF-8">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        /* Using system fonts for reliable PDF generation without network dependency */
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             color: #2c3e50;
             line-height: 1.5;
             padding: 20px;
